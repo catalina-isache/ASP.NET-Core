@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,44 +10,60 @@ namespace DAL.Data
 {
     public class ProiectContext: DbContext
     {
-        /*public DbSet<Student> Students { get; set; }
-        public DbSet<Course> Courses { get; set; }
-        public DbSet<StudentInCourse> StudentsInCourse { get; set; }
-        public DbSet<Teacher> Teachers { get; set; }
-        public DbSet<CourseGrade> CoursesGrades { get; set; }
-        */
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<SavedList> SavedLists { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<CategoryForPost> CategoryForPost { get; set; }
 
         public ProiectContext(DbContextOptions<ProiectContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            /*modelBuilder.Entity<StudentInCourse>()
-                  .HasKey(sc => new { sc.StudentId, sc.CourseId });
-           
-            modelBuilder.Entity<Student>()
-                .HasMany(s => s.StudentsInCourses)
-                .WithOne(sic => sic.Student)
+            modelBuilder.Entity<User>()
+             .HasOne(u => u.SavedList)
+             .WithOne(sl => sl.User)
+             .HasForeignKey<SavedList>(sl => sl.UserId)
+             .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CategoryForPost>()
+           .HasKey(cp => new { cp.CategoryId, cp.PostId });
+
+            modelBuilder.Entity<CategoryForPost>()
+                .HasOne(cp => cp.Category)
+                .WithMany(c => c.CategoryForPost)
+                .HasForeignKey(cp => cp.CategoryId);
+
+            modelBuilder.Entity<CategoryForPost>()
+                .HasOne(cp => cp.Post)
+                .WithMany(p => p.CategoryForPost)
+                .HasForeignKey(cp => cp.PostId);
+            /*modelBuilder.Entity<CategoryForPost>()
+                .HasOne(cfp => cfp.Post)
+                .WithMany()
+                .HasForeignKey(cfp => cfp.PostId)
+                .OnDelete(DeleteBehavior.SetNull);
+            */
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.Post)
+                .WithMany(p => p.Comments)
+                .HasForeignKey(c => c.PostId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.User)
+                .WithMany()
+                .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<StudentInCourse>()
-                        .HasOne(sc => sc.Student)
-                        .WithMany(s => s.StudentsInCourses)
-                        .HasForeignKey(sc => sc.StudentId);
-
-            modelBuilder.Entity<StudentInCourse>()
-                        .HasOne(sc => sc.Course)
-                        .WithMany(c => c.StudentsInCourses)
-                        .HasForeignKey(sc => sc.CourseId);
-
-            modelBuilder.Entity<Teacher>()
-                .HasMany(t => t.Courses)
-                .WithOne(c => c.Teacher);
-
-            modelBuilder.Entity<CourseGrade>()
-                .HasOne(cg => cg.StudentInCourse)
-                .WithOne(c => c.StudentCourseGrade)
-                .HasForeignKey<StudentInCourse>(g => g.StudentCourseGradeId);
-            */
             base.OnModelCreating(modelBuilder);
         }
     }

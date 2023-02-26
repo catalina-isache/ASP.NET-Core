@@ -1,0 +1,37 @@
+/* Sidebar */
+#sidebar-wrapper {
+  min-height: 100vh;
+}
+
+  #sidebar-wrapper .sidebar-heading {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  #sidebar-wrapper .list-group {
+    margin: 0;
+  }
+
+  #sidebar-wrapper .list-group-item {
+    border-radius: 0;
+    border-color: transparent;
+  }
+
+    #sidebar-wrapper .list-group-item.active {
+      background-color: #f8f9fa;
+    }
+
+/* Page Content */
+#page-content-wrapper {
+  width: 100%;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+  width: 250px;
+}
+
+#wrapper.toggled #page-content-wrapper {
+  margin-right: -250px;
+}
