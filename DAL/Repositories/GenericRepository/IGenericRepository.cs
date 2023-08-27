@@ -1,6 +1,6 @@
-﻿using Demo.Models.Base;
+﻿
 
-namespace Demo.Repository.GenericRepository
+namespace DAL.Repository.GenericRepository
 {
     public interface IGenericRepository<TEntity> where TEntity : class
     {

@@ -3,7 +3,7 @@ using DAL.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
-namespace Demo.Repository.GenericRepository
+namespace DAL.Repository.GenericRepository
 {
     public class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEntity: class
     {

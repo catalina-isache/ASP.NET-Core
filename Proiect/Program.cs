@@ -7,6 +7,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using Proiect.Services.CategoryService;
 using DAL.Repositories.CategoryRepository;
+using Proiect.Services.UserService;
+using Proiect.Services.AdminService;
+using DAL.Repositories.UserRepository;
+using Proiect.Helpers.JwtUtils;
+using AutoMapper;
+using Proiect.Profiles;
+using Microsoft.Extensions.Options;
+using Proiect.Helpers.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,9 +26,19 @@ var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
+
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddDbContext<ProiectContext>(options => options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"), b => b.MigrationsAssembly("Proiect")));
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IJwtUtils, JwtUtils>();
+
+
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -47,9 +65,19 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+
+app.UseMiddleware<JwtMiddleware>();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthorization();
 app.UseCors("AllowAnyOrigin");
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MappingProfile());
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
 
 app.UseEndpoints(endpoints =>
 {

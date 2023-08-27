@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DAL.Models;
+using DAL.Repository.GenericRepository;
 
 namespace DAL.Repositories.UserRepository
 {
-    internal interface IUserRepository
+    public interface IUserRepository : IGenericRepository<User>
     {
+        User FindByEmail(string email);
+        User FindById(Guid id);
+        Task CreatePost(Post post);
+        void DeletePost(Post post);
+        Task<Post> FindPostByIdAsync(Guid id);
+        Task<Comment> FindCommentByIdAsync(Guid id);
+        Task DeleteComment(Comment comment);
+
     }
 }
