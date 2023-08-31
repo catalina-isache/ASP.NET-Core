@@ -1,4 +1,5 @@
 ﻿using DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -31,6 +32,32 @@ namespace Proiect.Controllers
         //   var categories = await _categoryService.GetAllCategories();
         //    return Ok(categories);
         //    }
+        [HttpGet]
+        [Route("/category/{categoryName}")]
+        [EnableCors("AllowAll")]
+        [Authorize]
+       
+        public async Task<IActionResult> GetPostsByCategoryNameAsync(string categoryName)
+        {
+            try
+            {
+                // Get the category ID from the categoryName
+                var categoryId = await _categoryService.GetCategoryIdByName(categoryName);
+        
+                if (categoryId == null) {
+                            return NotFound();
+                        }
+                var posts = await _categoryService.GetPostsByCategoryId((Guid)categoryId);
+        
+                return Ok(posts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+
 
         [HttpGet]
         [Route("posts/category/{categoryId}")]

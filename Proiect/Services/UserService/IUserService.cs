@@ -9,5 +9,6 @@ namespace Proiect.Services.UserService
         Task Create(UserAuthRequestDto user);
         Task<List<User>> GetAllUsers();
         User GetById(Guid id);
+        Task<int> UserRole(Guid id);
     }
 }

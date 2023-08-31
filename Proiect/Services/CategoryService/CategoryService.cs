@@ -35,6 +35,10 @@ namespace Proiect.Services.CategoryService
         {
             return await _categoryRepository.GetPostsByCategoryId(categoryId);
         }
+        public async Task<Guid?> GetCategoryIdByName(string categoryName)
+        {
+            return await _categoryRepository.GetCategoryIdByName(categoryName);
+        }
     }
 
 }

@@ -17,5 +17,6 @@ namespace DAL.Repositories.CategoryRepository
         Task<bool> Delete(Guid id);
         Task<List<Category>> GetAllCategories();
         Task<List<Post>> GetPostsByCategoryId(Guid categoryId);
+        Task<Guid?> GetCategoryIdByName(string categoryName);
     }
 }

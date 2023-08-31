@@ -9,12 +9,16 @@ using Proiect.Services.CategoryService;
 using DAL.Repositories.CategoryRepository;
 using Proiect.Services.UserService;
 using Proiect.Services.AdminService;
+using Microsoft.AspNetCore.Builder;
 using DAL.Repositories.UserRepository;
 using Proiect.Helpers.JwtUtils;
 using AutoMapper;
 using Proiect.Profiles;
 using Microsoft.Extensions.Options;
 using Proiect.Helpers.Middleware;
+//using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,14 +49,25 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("3.1.0", new OpenApiInfo { Title = "My API", Version = "3.1.0" });
 });
 
-builder.Services.AddCors(options =>
+builder.Services.AddAuthentication().AddJwtBearer(options =>
 {
-    options.AddPolicy("AllowAll",
-        builder => builder.AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader());
-});
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+            builder.Configuration.GetSection("AppSettings:Token").Value!))
 
+    };
+});
+builder.Services.AddCors((setup) =>
+{
+    setup.AddPolicy("default", (options) =>
+    {
+        options.AllowAnyMethod().AllowAnyOrigin().AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
@@ -61,17 +76,26 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseSwagger();
+
+    // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+    // specifying the Swagger JSON endpoint.
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/3.1.0/swagger.json", "My API 3.1.0");
+        c.RoutePrefix = string.Empty;
+    });
+
 }
-
+app.UseCors("default");
 app.UseHttpsRedirection();
-
-
-app.UseMiddleware<JwtMiddleware>();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors("AllowAnyOrigin"); // Allow CORS before authentication/authorization
+app.UseAuthentication(); // Add this line for authentication
 app.UseAuthorization();
-app.UseCors("AllowAnyOrigin");
+//app.UseMiddleware<JwtMiddleware>();
+
 var mapperConfig = new MapperConfiguration(mc =>
 {
     mc.AddProfile(new MappingProfile());
@@ -85,16 +109,6 @@ app.UseEndpoints(endpoints =>
 });
 
 // Enable middleware to serve generated Swagger as a JSON endpoint.
-app.UseSwagger();
-
-// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-// specifying the Swagger JSON endpoint.
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/3.1.0/swagger.json", "My API 3.1.0");
-    c.RoutePrefix = string.Empty;
-});
-
 
 
 app.MapControllerRoute(

@@ -47,5 +47,15 @@ namespace DAL.Repositories.UserRepository
         {
             return _context.Users.SingleOrDefault(u => u.Id == id);
         }
+
+        public int UserRole(Guid id)
+        {
+            var user = _context.Users.SingleOrDefault(u => u.Id == id);
+            if (user != null)
+            {
+                return (int)user.Role; // Assuming 'Role' is an int property in your User model representing the user's role
+            }
+            return -1;
+        }
     }
 }

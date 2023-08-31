@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
+import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { UserService } from '../../user.service';
 @Component({
@@ -9,13 +9,12 @@ import { UserService } from '../../user.service';
   styleUrls: ['./login-form.component.css']
 })
 export class LoginFormComponent {
-  loginForm: FormGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required])
-  });
-
-  constructor(private fb: FormBuilder, private userService: UserService) {
-
+  loginForm: FormGroup;
+  constructor(private router: Router, private fb: FormBuilder, private userService: UserService) {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
+    });
   }
 
 
@@ -30,6 +29,7 @@ export class LoginFormComponent {
             // handle successful authentication here
             localStorage.setItem('jwtToken', response.jwtToken);
             localStorage.setItem('userId', response.id);
+            this.router.navigate(['/']);
           },
             (          error: any) => {
             // handle authentication error here

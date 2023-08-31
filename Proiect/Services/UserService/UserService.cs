@@ -52,5 +52,11 @@ namespace Proiect.Services.UserService
         {
             return _userRepository.FindById(id);
         }
+
+        public async Task<int> UserRole(Guid id)
+        {
+            return _userRepository.UserRole(id);
+        }
+    
     }
 }

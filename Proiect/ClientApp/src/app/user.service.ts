@@ -6,6 +6,8 @@ import { map } from 'rxjs/operators';
 import { UserAuthRequestDto } from './UserAuthRequestDto.model';
 import { UserAuthResponseDto } from './UserAuthResponseDto.model';
 import { User } from './user.model';
+import { AuthService } from './auth.service';
+import { tap } from 'rxjs';
 
 
 @Injectable({
@@ -14,11 +16,18 @@ import { User } from './user.model';
 export class UserService {
   private readonly baseUrl = 'https://localhost:7034/api/auth';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   authenticate(email: string, password: string): Observable<UserAuthResponseDto> {
     const user = { email: email, password: password };
-    return this.http.post<UserAuthResponseDto>(`${this.baseUrl}/login-user`, user);
+    return this.http.post<UserAuthResponseDto>(`${this.baseUrl}/login-user`, user).pipe(
+      tap((response: any) => {
+        if (response) {
+          localStorage.setItem('jwtToken', response.jwtToken);
+          this.authService.updateAuthenticationStatus(); // Update authentication status
+        }
+      })
+    );
   }
 
   create(user: UserAuthRequestDto): Observable<User> {

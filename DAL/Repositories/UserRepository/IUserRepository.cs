@@ -12,6 +12,6 @@ namespace DAL.Repositories.UserRepository
         Task<Post> FindPostByIdAsync(Guid id);
         Task<Comment> FindCommentByIdAsync(Guid id);
         Task DeleteComment(Comment comment);
-
+        int UserRole(Guid id);
     }
 }

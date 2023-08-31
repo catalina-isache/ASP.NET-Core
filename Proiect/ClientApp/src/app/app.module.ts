@@ -15,6 +15,8 @@ import { CategoryComponent } from './category/category.component';
 import { PostComponent } from './post/post.component';
 import { LoginFormComponent } from './auth/login-form/login-form.component';
 import { SignUpFormComponent } from './auth/sign-up-form/sign-up-form.component';
+import { AdminGuard } from './guards/admin.guards';
+import { AuthGuard } from './guards/auth.guard';
 
 
 @NgModule({
@@ -34,9 +36,11 @@ import { SignUpFormComponent } from './auth/sign-up-form/sign-up-form.component'
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'categories/names', component: HomeComponent, pathMatch: 'full' },
-      { path: 'category/:categoryId', component: CategoryComponent, pathMatch: 'full' },
+      { path: 'category/:categoryId', component: CategoryComponent, pathMatch: 'full', canActivate: [AdminGuard] },
+      { path: 'category/:categoryName', component: CategoryComponent, pathMatch: 'full', canActivate: [AdminGuard] },
      // { path: 'login', component: LoginFormComponent, pathMatch: 'full' },
      // { path: 'signup', component: SignUpFormComponent, pathMatch: 'full' }
+      { path: 'admin', component: CategoryComponent, canActivate: [AdminGuard] },
 
     ])
   ],

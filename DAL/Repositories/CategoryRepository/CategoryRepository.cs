@@ -31,7 +31,13 @@ namespace DAL.Repositories.CategoryRepository
             return category;
         }
 
-
+        public async Task<Guid?> GetCategoryIdByName(string categoryName)
+        {
+            return await _context.Categories
+                .Where(c => c.Name == categoryName)
+                .Select(c => c.Id)
+                .FirstOrDefaultAsync();
+        }
 
         public async Task<bool> IsCategoryExist(Guid categoryId)
         {

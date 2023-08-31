@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { UserService } from '../../user.service';
 import { UserAuthRequestDto } from '../../UserAuthRequestDto.model';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-sign-up-form',
   templateUrl: './sign-up-form.component.html',
@@ -13,7 +13,7 @@ import { UserAuthRequestDto } from '../../UserAuthRequestDto.model';
 export class  SignUpFormComponent {
     signUpForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private userService: UserService) {
+  constructor(private router: Router,private fb: FormBuilder, private userService: UserService) {
     this.signUpForm = this.fb.group({
       name: [''],
       email: ['', [Validators.required, Validators.email]],
@@ -63,6 +63,7 @@ export class  SignUpFormComponent {
                 // handle successful authentication here
                 localStorage.setItem('jwtToken', response.jwtToken);
                 localStorage.setItem('userId', response.id);
+                this.router.navigate(['/']);
               },
               error => {
                 // handle authentication error here
@@ -81,6 +82,7 @@ export class  SignUpFormComponent {
                       // handle successful authentication here
                       localStorage.setItem('jwtToken', response.jwtToken);
                       localStorage.setItem('userId', response.id);
+                      this.router.navigate(['/']);
                     },
                     error => {
                       // handle authentication error here

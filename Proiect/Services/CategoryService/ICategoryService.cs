@@ -9,6 +9,7 @@ namespace Proiect.Services.CategoryService
         Task<Category> CreateCategory(Category category);
         Task<bool> DeleteCategory(Guid id);
         Task<List<Post>> GetPostsByCategoryId(Guid categoryId);
+        Task<Guid?>GetCategoryIdByName(string categoryName);
     }
 
 }

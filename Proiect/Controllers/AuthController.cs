@@ -16,7 +16,7 @@ public class AuthController : ControllerBase
     public AuthController(IUserService userService)
     {
         _userService = userService;
-    }
+    }                                                           
     [HttpGet("user")]
     [EnableCors("AllowAll")]
     public async Task<IActionResult> GetAllUsers()
@@ -24,6 +24,24 @@ public class AuthController : ControllerBase
         var users = await _userService.GetAllUsers();
         return Ok(users);
     }
+    [HttpGet("is-admin")]
+    [EnableCors("AllowAll")]
+    public async Task<IActionResult> IsAdmin()
+    {
+        
+        var userIdClaim = User.FindFirst("id");
+        if (userIdClaim == null)
+        {
+            return BadRequest("User ID claim not found in token.");
+        }
+
+        var userId = Guid.Parse(userIdClaim.Value); // Get the user's ID from the token
+        int x = await _userService.UserRole(userId); // Fetch the user's role from the database
+
+        bool isAdmin = (x == 0);
+        return Ok(isAdmin);
+    }
+
 
     [HttpPost("create-user")]
     [EnableCors("AllowAll")]
@@ -42,6 +60,12 @@ public class AuthController : ControllerBase
         {
             return BadRequest("Username or password is invalid!");
         }
+        var userIdClaim = User.FindFirst("id");
+        if (userIdClaim == null)
+        {
+            Console.WriteLine("here");
+        }
+
         return Ok(response);
     }
 
