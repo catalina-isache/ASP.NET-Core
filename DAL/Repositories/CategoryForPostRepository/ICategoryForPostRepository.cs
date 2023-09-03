@@ -1,12 +1,16 @@
-﻿using System;
+﻿using DAL.Models;
+using DAL.Repository.GenericRepository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Repositories.CategoryForPostRepository
+namespace DAL.Repositories
 {
-    internal interface ICategoryForPostRepository
+
+    public interface ICategoryForPostRepository : IGenericRepository<CategoryForPost>
     {
+        Task AddAsync(CategoryForPost categoryForPost);
     }
 }

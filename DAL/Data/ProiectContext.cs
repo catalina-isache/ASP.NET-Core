@@ -16,7 +16,7 @@ namespace DAL.Data
         public DbSet<SavedList> SavedLists { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CategoryForPost> CategoryForPost { get; set; }
-
+        public DbSet<SavedPost> SavedPosts { get; set; }
         public ProiectContext(DbContextOptions<ProiectContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -45,6 +45,18 @@ namespace DAL.Data
                 .HasForeignKey(cfp => cfp.PostId)
                 .OnDelete(DeleteBehavior.SetNull);
             */
+            modelBuilder.Entity<SavedPost>()
+            .HasKey(sp => new { sp.PostId, sp.UserId });
+
+            modelBuilder.Entity<SavedPost>()
+                .HasOne(sp => sp.Post)
+                .WithMany(p => p.SavedPosts)
+                .HasForeignKey(sp => sp.PostId);
+
+            modelBuilder.Entity<SavedPost>()
+                .HasOne(sp => sp.User)
+                .WithMany(u => u.SavedPosts)
+                .HasForeignKey(sp => sp.UserId);
 
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.User)

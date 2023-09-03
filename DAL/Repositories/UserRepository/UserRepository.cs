@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Repositories.UserRepository
+namespace DAL.Repositories
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
@@ -53,7 +53,7 @@ namespace DAL.Repositories.UserRepository
             var user = _context.Users.SingleOrDefault(u => u.Id == id);
             if (user != null)
             {
-                return (int)user.Role; // Assuming 'Role' is an int property in your User model representing the user's role
+                return (int)user.Role;
             }
             return -1;
         }

@@ -1,9 +1,25 @@
-<p>post works!</p>
 <div class="card">
-  <div class="card-header">
+  <div class="card-header d-flex justify-content-between align-items-center">
     <h5 class="card-title">{{ post.title }}</h5>
+    <div>
+      <button class="btn btn-danger delete-button" (click)="deletePost(post.id)" *ngIf="userRole === 'Admin'">
+        <i class="fas fa-trash-alt text-danger"></i> 
+      </button>
+    </div>
+
+    <div class="ml-auto">
+      <button class="btn btn-success save-button" (click)="savePost(post.id)">
+        <i class="fas fa-save text-success"></i> 
+      </button>
+    </div>
   </div>
   <div class="card-body">
     <p class="card-text">{{ post.content }}</p>
+    <div class="image-container">
+      <img src="{{ post.imageURL }}" alt="Post Image" class="card-image" width="300" height="200">
+    </div>
+  </div>
+  <div class="card-footer">
+    <button class="btn btn-primary" (click)="goToComments(post.id)">Go to Comments</button>
   </div>
 </div>

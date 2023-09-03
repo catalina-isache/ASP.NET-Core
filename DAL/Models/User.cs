@@ -13,6 +13,7 @@ namespace DAL.Models
         public string Name { get; set; } = "";
         public string Email { get; set; } = "";
         public SavedList? SavedList { get; set; }
+        public ICollection<SavedPost>? SavedPosts { get; set; }
 
         public Role? Role { get; set; }
         [JsonIgnore]

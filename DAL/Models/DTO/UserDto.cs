@@ -9,10 +9,17 @@ namespace DAL.Models.DTO
     public class UserDto
     {
         public Guid Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string Name { get; set; }
         public string Email { get; set; }
-        public string PhoneNumber { get; set; }
+        public string Password { get; set; }
+
+        public UserDto(User user)
+        {
+            this.Id = user.Id;
+            this.Name = user.Name;
+            this.Email = user.Email;
+            this.Password = user.PasswordHash;
+        }
     }
 
 }

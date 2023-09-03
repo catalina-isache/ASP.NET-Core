@@ -14,5 +14,31 @@ html {
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+  box-shadow: purple; /* Purple shadow color */
 }
+
+/* styles.css or styles.scss */
+.bg-dark {
+  background-color: black !important; /* You can adjust the color as needed */
+  /* Other styles if needed */
+}
+.navbar.navbar-light.bg-dark .navbar-nav .nav-link {
+  color: white !important; /* This sets the text color to white */
+}
+/*.nav-item {
+  background-color: purple !important;*/ /* You can adjust the color as needed */
+  /* Other styles if needed */
+/*}*/
+/* styles.css or your custom stylesheet */
+.btn-purple {
+  background-color: purple; /* Set the background color to purple */
+  color: white; /* Set the text color to white */
+  border: none; /* Remove the button border */
+  padding: 0.5rem 1rem; /* Adjust padding as needed */
+  border-radius: 5px; /* Add border-radius for rounded corners */
+  cursor: pointer; /* Change cursor to pointer on hover for better UX */
+}
+
+  .btn-purple:hover {
+    background-color: darkpurple; /* Change the background color on hover if desired */
+  }

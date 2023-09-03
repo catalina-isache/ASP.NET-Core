@@ -17,21 +17,20 @@ namespace Proiect.Helpers.Middleware
         {
             var token = httpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             var ok = httpContext;
-            var userId = jwtUtils.ValidateJwtToken(token);
-
-            if (userId != Guid.Empty)
+            //var userId = jwtUtils.ValidateJwtToken(token);
+            if (token != null)
             {
-                // httpContext.Items["User"] = teacherService.GetById(userId);
-                var x = userService.GetById(userId);
-                if (x == null)
+                var userId = jwtUtils.ValidateJwtToken(token);
+                if (userId != Guid.Empty)
                 {
-                    Console.WriteLine("not ok");
+                    var user = userService.GetById(userId);
+                    if (user != null)
+                    {
+                        httpContext.Items["User"] = user;
+                    }
                 }
-
-                httpContext.Items["User"] = userService.GetById(userId);
-
             }
-
+           
             await _next(httpContext);
         }
     } 

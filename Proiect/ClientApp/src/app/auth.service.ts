@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
 import { map, ReplaySubject } from 'rxjs';
 import { ApiService } from './api.service';
 
@@ -45,8 +45,14 @@ export class AuthService {
     this.isAuthenticatedSubject.next(false);
   }
   isAdmin(): Observable<boolean> {
+    const token = localStorage.getItem('jwtToken');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const requestOptions = { headers: headers };
 
-    return this.http.get<boolean>('https://localhost:7034/api/auth/is-admin');
+    return this.http.get<boolean>(`https://localhost:7034/api/auth/is-admin`, requestOptions).pipe(
+      map(() => true),
+      catchError(() => of(false)) 
+    );
   }
   
 }

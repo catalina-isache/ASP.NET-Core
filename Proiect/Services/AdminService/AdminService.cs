@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DAL.Models;
 using DAL.Models.DTO;
-using DAL.Repositories.UserRepository;
+using DAL.Repositories;
 
 namespace Proiect.Services.AdminService
 {
@@ -21,7 +21,7 @@ namespace Proiect.Services.AdminService
 
             if (user == null)
             {
-                // You can choose to return null, throw an exception, or return a default value
+               
                 return null;
             }
 

@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 export class  SignUpFormComponent {
     signUpForm: FormGroup;
 
-  constructor(private router: Router,private fb: FormBuilder, private userService: UserService) {
+  constructor(private router: Router,  private fb: FormBuilder, private userService: UserService) {
     this.signUpForm = this.fb.group({
       name: [''],
       email: ['', [Validators.required, Validators.email]],
@@ -56,21 +56,21 @@ export class  SignUpFormComponent {
         console.log("aici");
         const user = users.find(u => u.email === email);
         if (user) {
-          // user already exists, authenticate
+         
           this.userService.authenticate(email, password)
             .subscribe(
               response => {
-                // handle successful authentication here
+            
                 localStorage.setItem('jwtToken', response.jwtToken);
-                localStorage.setItem('userId', response.id);
+               
                 this.router.navigate(['/']);
               },
               error => {
-                // handle authentication error here
+               
               }
             );
         } else {
-          // user doesn't exist, create new user
+          
           const userDto: UserAuthRequestDto = { email: email, password: password, name: name };
           this.userService.create(userDto)
             .subscribe(
@@ -79,18 +79,18 @@ export class  SignUpFormComponent {
                 this.userService.authenticate(email, password)
                   .subscribe(
                     response => {
-                      // handle successful authentication here
+                    
                       localStorage.setItem('jwtToken', response.jwtToken);
-                      localStorage.setItem('userId', response.id);
+                   
                       this.router.navigate(['/']);
                     },
                     error => {
-                      // handle authentication error here
+                     
                     }
                   );
               },
               error => {
-                // handle user creation error here
+              
               }
             );
         }

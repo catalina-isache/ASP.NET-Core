@@ -32,16 +32,18 @@ namespace Proiect.Controllers
         //   var categories = await _categoryService.GetAllCategories();
         //    return Ok(categories);
         //    }
+      /* 
+        [Authorize(Roles = "Admin")]*/
         [HttpGet]
         [Route("/category/{categoryName}")]
         [EnableCors("AllowAll")]
-        [Authorize]
+        
        
         public async Task<IActionResult> GetPostsByCategoryNameAsync(string categoryName)
         {
             try
             {
-                // Get the category ID from the categoryName
+                
                 var categoryId = await _categoryService.GetCategoryIdByName(categoryName);
         
                 if (categoryId == null) {

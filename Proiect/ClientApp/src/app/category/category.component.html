@@ -1,14 +1,38 @@
-<p>category works!</p>
+
 <div class="row">
   <div class="col-md-12">
-    <!--<h2>{{ category.name }} Posts</h2>-->
     <hr>
   </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <button *ngIf="userRole === 'Admin'" (click)="createNewPost()"  class="purple-button">Create New Post</button>
   </div>
-  <div class="row">
-    <div class="col-md-12">
-      <div *ngFor="let post of posts">
-        <app-post [post]="post"></app-post>
+</div>
+<div class="row" *ngIf="showCreateForm">
+  <div class="col-md-12">
+    <h2>Create a New Post</h2>
+    <form (submit)="onSubmit()">
+      <div class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" [(ngModel)]="newPost.title" required>
       </div>
+      <div class="form-group">
+        <label for="imageUrl">Image URL:</label>
+        <input type="text" id="imageUrl" name="imageUrl" [(ngModel)]="newPost.imageURL" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" [(ngModel)]="newPost.content" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div *ngFor="let post of posts">
+      <app-post [post]="post"></app-post>
     </div>
   </div>
+</div>

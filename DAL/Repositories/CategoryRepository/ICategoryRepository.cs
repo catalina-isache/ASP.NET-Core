@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Repositories.CategoryRepository
+namespace DAL.Repositories
 {
     public interface ICategoryRepository : IGenericRepository<Category>
     {

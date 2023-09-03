@@ -1,5 +1,5 @@
 ﻿using DAL.Models;
-using DAL.Repositories.CategoryRepository;
+using DAL.Repositories;
 
 namespace Proiect.Services.CategoryService
 {

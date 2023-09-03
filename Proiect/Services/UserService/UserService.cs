@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using DAL.Models;
 using DAL.Models.DTO;
-using DAL.Repositories.UserRepository;
-using Microsoft.AspNetCore.Identity;
+using DAL.Repositories;
 using Proiect.Helpers.JwtUtils;
 using BCryptNet = BCrypt.Net.BCrypt;
 namespace Proiect.Services.UserService
@@ -28,7 +27,6 @@ namespace Proiect.Services.UserService
                 throw new Exception();
             }
 
-            // jwt generation
             var jwtToken = _jwtUtilis.GenerateJwtToken(user);
             return new UserAuthResponseDto(user, jwtToken);
         }

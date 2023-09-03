@@ -30,7 +30,7 @@ export class NavMenuComponent {
     this.isExpanded = !this.isExpanded;
   }
   logout() {
-    this.authService.logout(); // Perform logout action
-    this.router.navigate(['/']); // Redirect to main page after logout
+    this.authService.logout(); 
+    this.router.navigate(['/']); 
   }
 }

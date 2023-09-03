@@ -9,12 +9,15 @@ namespace DAL.Models.DTO
 {
     public class UserAuthRequestDto
     {
+        //public int Id;
+
         [Required]
         public string Password { get; set; }
 
         [Required]
         public string Email { get; set; }
         public string? Name { get; set; }
+        public string? Role { get; set; }
     }
 }
 

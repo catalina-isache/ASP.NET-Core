@@ -7,10 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Repositories.PostRepository
+namespace DAL.Repositories
 {
-    public interface IPostRepository: IGenericRepository<Post>
+    public interface IPostRepository : IGenericRepository<Post>
     {
-       
+        Task AddAsync(Post post);
+        Task<bool> DeleteAsync(Guid postId);
+        Task<Post> FindAsync(Guid id);
+        Task<List<Comment>> GetCommentsByPostId(Guid postId);
     }
 }

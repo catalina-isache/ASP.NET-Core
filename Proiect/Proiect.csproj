@@ -38,6 +38,8 @@
     <Folder Include="ClientApp\src\app\auth\login-form\" />
     <Folder Include="ClientApp\src\app\auth\sign-up-form\" />
     <Folder Include="ClientApp\src\app\NewFolder\" />
+    <Folder Include="Services\NewFolder1\" />
+    <Folder Include="Services\NewFolder\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -24,15 +24,15 @@ export class LoginFormComponent {
       const password = this.loginForm.value.password;
       this.userService.authenticate(email, password)
         .subscribe(
-            (  response: { jwtToken: string; id: string; }) => {
+            (  response) => {
             console.log(response);
-            // handle successful authentication here
-            localStorage.setItem('jwtToken', response.jwtToken);
-            localStorage.setItem('userId', response.id);
+           
+           // localStorage.setItem('jwtToken', response.jwtToken);
+           // localStorage.setItem('userId', response.id);
             this.router.navigate(['/']);
           },
             (          error: any) => {
-            // handle authentication error here
+          
           }
         );
     }

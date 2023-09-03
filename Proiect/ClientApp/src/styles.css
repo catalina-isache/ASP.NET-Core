@@ -1,16 +1,46 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import "~@fortawesome/fontawesome-free/css/all.css";
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+  color: black;
 }
 
 code {
-  color: #e01a76;
+  color: purple;
 }
 
 .btn-primary {
   color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  background-color: black;
+  border-color: purple;
+}
+.btn-primary:hover {
+  color: #fff;
+  background-color: purple;
+  border-color: purple;
+}
+body {
+  background-color: black;
+  color: white; /* Optional: Set text color to white for better readability */
+}
+/* styles.css or your custom stylesheet */
+.bg-black {
+  background-color: black; /* Set the background color to black */
+}
+
+.text-white {
+  color: white; /* Set the text color to white */
+}
+.list-group list-group-flush {
+  background-color: black;
+}
+.container{
+    width: 12000px;
+}
+.d-flex{
+    justify-content:end;
+}
+.custom-sidebar {
+  width: 300px; /* Set the desired width here */
+  padding-left: 100px;
 }

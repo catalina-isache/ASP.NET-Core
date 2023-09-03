@@ -1,12 +1,14 @@
-﻿using System;
+﻿using DAL.Models;
+using DAL.Repository.GenericRepository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Repositories.SavedListRepository
+namespace DAL.Repositories
 {
-    internal interface ISavedListRepository
+    public interface ISavedListRepository : IGenericRepository<SavedList>
     {
     }
 }

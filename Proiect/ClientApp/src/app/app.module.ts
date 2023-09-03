@@ -17,6 +17,8 @@ import { LoginFormComponent } from './auth/login-form/login-form.component';
 import { SignUpFormComponent } from './auth/sign-up-form/sign-up-form.component';
 import { AdminGuard } from './guards/admin.guards';
 import { AuthGuard } from './guards/auth.guard';
+import { PostWithCommentsComponent } from './post-with-comments/post-with-comments.component';
+import { CommentComponent } from './comment/comment.component';
 
 
 @NgModule({
@@ -26,21 +28,25 @@ import { AuthGuard } from './guards/auth.guard';
     HomeComponent,
     SidebarComponent,
     CategoryComponent,
-    PostComponent
+    PostComponent,
+    PostWithCommentsComponent,
+    CommentComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     AuthModule,
+    FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'categories/names', component: HomeComponent, pathMatch: 'full' },
-      { path: 'category/:categoryId', component: CategoryComponent, pathMatch: 'full', canActivate: [AdminGuard] },
-      { path: 'category/:categoryName', component: CategoryComponent, pathMatch: 'full', canActivate: [AdminGuard] },
+      { path: 'category/:categoryId', component: CategoryComponent, pathMatch: 'full'},
+      { path: 'category/:categoryName', component: CategoryComponent, pathMatch: 'full'},
      // { path: 'login', component: LoginFormComponent, pathMatch: 'full' },
      // { path: 'signup', component: SignUpFormComponent, pathMatch: 'full' }
       { path: 'admin', component: CategoryComponent, canActivate: [AdminGuard] },
+      { path: 'post/:id', component: PostWithCommentsComponent },
 
     ])
   ],

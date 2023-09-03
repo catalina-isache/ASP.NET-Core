@@ -1,0 +1,21 @@
+.comment-container {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color:purple;
+}
+
+.comment-header {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.comment-content{
+    color:white;
+}
+.user-name {
+  color: beige; /* Blue color for the user's name */
+}
+
+.comment-content {
+  font-size: 14px;
+}

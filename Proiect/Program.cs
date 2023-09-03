@@ -6,11 +6,10 @@ using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using Proiect.Services.CategoryService;
-using DAL.Repositories.CategoryRepository;
+using DAL.Repositories;
 using Proiect.Services.UserService;
 using Proiect.Services.AdminService;
 using Microsoft.AspNetCore.Builder;
-using DAL.Repositories.UserRepository;
 using Proiect.Helpers.JwtUtils;
 using AutoMapper;
 using Proiect.Profiles;
@@ -19,6 +18,11 @@ using Proiect.Helpers.Middleware;
 //using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DAL.Repositories.UnitOfWork;
+using Proiect.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Proiect.Services.PostService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,12 +38,16 @@ var configuration = new ConfigurationBuilder()
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddDbContext<ProiectContext>(options => options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"), b => b.MigrationsAssembly("Proiect")));
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICategoryForPostRepository, CategoryForPostRepository>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IJwtUtils, JwtUtils>();
-
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IPostService, PostService>();
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -49,7 +57,11 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("3.1.0", new OpenApiInfo { Title = "My API", Version = "3.1.0" });
 });
 
-builder.Services.AddAuthentication().AddJwtBearer(options =>
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -57,42 +69,40 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
         ValidateAudience = false,
         ValidateIssuer = false,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-            builder.Configuration.GetSection("AppSettings:Token").Value!))
+            builder.Configuration.GetSection("JWT:Key").Value!))
 
     };
 });
-builder.Services.AddCors((setup) =>
+builder.Services.AddAuthorization(options =>
 {
-    setup.AddPolicy("default", (options) =>
-    {
-        options.AllowAnyMethod().AllowAnyOrigin().AllowAnyHeader();
-    });
+    options.DefaultPolicy = new AuthorizationPolicyBuilder()
+         .RequireAuthenticatedUser()
+         .RequireRole("User", "Admin") 
+        .Build();
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder => builder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
 });
 
 var app = builder.Build();
 
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseSwagger();
-
-    // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-    // specifying the Swagger JSON endpoint.
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/3.1.0/swagger.json", "My API 3.1.0");
-        c.RoutePrefix = string.Empty;
-    });
-
+    app.UseHsts();
+ 
 }
-app.UseCors("default");
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseCors("AllowAnyOrigin"); // Allow CORS before authentication/authorization
-app.UseAuthentication(); // Add this line for authentication
+app.UseCors("AllowAll"); 
+app.UseAuthentication(); 
 app.UseAuthorization();
 //app.UseMiddleware<JwtMiddleware>();
 
@@ -107,9 +117,13 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
+app.UseSwagger();
 
-// Enable middleware to serve generated Swagger as a JSON endpoint.
-
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/3.1.0/swagger.json", "My API 3.1.0");
+    c.RoutePrefix = string.Empty;
+});
 
 app.MapControllerRoute(
     name: "default",
